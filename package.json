@@ -1,0 +1,14 @@
+{
+  "name": "brain-mahalilah",
+  "version": "1.0.0",
+  "description": "IA Denise Mascarenhas — Instituto Maha Lilah",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix server && npm install --prefix bot",
+    "server": "npm start --prefix server",
+    "server:dev": "npm run dev --prefix server",
+    "bot": "npm start --prefix bot",
+    "bot:dev": "npm run dev --prefix bot",
+    "start": "npm run server"
+  }
+}
