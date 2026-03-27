@@ -12,20 +12,26 @@ IA baseada na metodologia de Denise Mascarenhas, com três formas de acesso:
 
 ```
 brain-mahalilah/
-├── server/               # Servidor Express + Claude API
-│   ├── index.js
-│   ├── package.json
+├── api/                  # Funções serverless (Vercel)
+│   ├── chat.js           # POST /api/chat
+│   ├── health.js         # GET /api/health
 │   └── data/
-│       └── system-prompt.md   # Persona completa da Denise (72 casas, serpentes, flechas)
-├── bot/                  # Bot Telegram (Telegraf.js)
-│   ├── index.js
-│   └── package.json
-├── pwa/                  # Progressive Web App
+│       └── system-prompt.md
+├── public/               # PWA servida pelo Vercel (ou pelo servidor Express)
 │   ├── index.html
 │   ├── manifest.json
 │   └── sw.js
+├── server/               # Servidor Express para rodar localmente
+│   ├── index.js
+│   ├── package.json
+│   └── data/
+│       └── system-prompt.md
+├── bot/                  # Bot Telegram (Telegraf.js)
+│   ├── index.js
+│   └── package.json
+├── vercel.json
 ├── .env.example
-└── package.json          # Scripts raiz
+└── package.json
 ```
 
 ---
@@ -118,7 +124,28 @@ Limpa o histórico de conversa de uma sessão.
 
 ---
 
-## Deploy (Railway / Render / Fly.io)
+## Deploy no Vercel (recomendado — grátis)
+
+> O Vercel serve a pasta `public/` como estático e a pasta `api/` como funções serverless. Não precisa de configuração extra.
+
+**Passos pelo celular:**
+
+1. Acesse [vercel.com](https://vercel.com) e crie uma conta (pode usar login do GitHub)
+2. Clique em **"Add New Project"** → **"Import Git Repository"**
+3. Selecione o repositório `marcosaccioly/brain-mahalilah`
+4. Em **"Environment Variables"**, adicione:
+   - `ANTHROPIC_API_KEY` = sua chave da Anthropic
+5. Clique em **"Deploy"**
+
+Pronto! A URL gerada pelo Vercel já serve a PWA e a API.
+
+> **Bot Telegram no Vercel:** o bot precisa de processo contínuo — não roda em serverless. Para o bot, use Railway ou Render (free tier disponível), apontando `SERVER_URL` para a URL do Vercel.
+
+---
+
+## Deploy alternativo (Railway / Render / Fly.io)
+
+Para rodar o servidor Express completo (com sessões em memória):
 
 1. Faça o push do código para o GitHub
 2. Crie um novo serviço apontando para este repositório

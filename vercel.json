@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    { "source": "/chat", "destination": "/api/chat" },
+    { "source": "/health", "destination": "/api/health" }
+  ]
+}
