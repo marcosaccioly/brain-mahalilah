@@ -1,4 +1,4 @@
-# 🪷 Denise Mascarenhas AI — Instituto Maha Lilah
+# 🪷 Brain Mahalilah AI
 
 IA baseada na metodologia de Denise Mascarenhas, com três formas de acesso:
 
