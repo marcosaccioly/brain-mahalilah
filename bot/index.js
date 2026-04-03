@@ -58,7 +58,7 @@ bot.command("reset", async (ctx) => {
 // ── /help ─────────────────────────────────────────────────────────────────────
 bot.command("help", async (ctx) => {
   await ctx.reply(
-    `🪷 *Padma — Instituto Maha Lilah*\n\n` +
+    `🪷 *Padma — Maha Lilah*\n\n` +
       `Comandos do jogo:\n` +
       `• \`*sessao\` — Iniciar sessão terapêutica\n` +
       `• \`*interpretar-casa {1-72}\` — Interpretar uma casa\n` +
