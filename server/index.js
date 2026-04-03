@@ -100,5 +100,5 @@ app.delete("/session/:id", (req, res) => {
 // ── Iniciar ───────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🪷 Denise Mascarenhas AI — servidor rodando na porta ${PORT}`);
+  console.log(`🪷 Padma AI — servidor rodando na porta ${PORT}`);
 });

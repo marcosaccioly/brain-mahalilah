@@ -1,7 +1,7 @@
 {
   "name": "denise-server",
   "version": "1.0.0",
-  "description": "Servidor da IA Denise Mascarenhas — Instituto Maha Lilah",
+  "description": "Servidor da IA Padma — Instituto Maha Lilah",
   "main": "index.js",
   "type": "module",
   "scripts": {

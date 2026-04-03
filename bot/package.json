@@ -1,7 +1,7 @@
 {
   "name": "denise-bot",
   "version": "1.0.0",
-  "description": "Bot Telegram da Denise Mascarenhas — Instituto Maha Lilah",
+  "description": "Bot Telegram da Padma — Instituto Maha Lilah",
   "main": "index.js",
   "type": "module",
   "scripts": {

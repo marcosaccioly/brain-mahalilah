@@ -37,13 +37,13 @@ bot.start(async (ctx) => {
   try {
     const greeting = await askDenise(
       sessionId,
-      "/start — cumprimente-me como Denise Mascarenhas"
+      "/start — cumprimente-me como Padma"
     );
     await ctx.reply(greeting, { parse_mode: "Markdown" });
   } catch (err) {
     console.error("Erro no /start:", err.message);
     await ctx.reply(
-      "🪷 Olá! Sou Denise Mascarenhas. O servidor está iniciando — tente novamente em instantes."
+      "🪷 Olá! Sou Padma. O servidor está iniciando — tente novamente em instantes."
     );
   }
 });
@@ -58,7 +58,7 @@ bot.command("reset", async (ctx) => {
 // ── /help ─────────────────────────────────────────────────────────────────────
 bot.command("help", async (ctx) => {
   await ctx.reply(
-    `🪷 *Denise Mascarenhas — Instituto Maha Lilah*\n\n` +
+    `🪷 *Padma — Instituto Maha Lilah*\n\n` +
       `Comandos do jogo:\n` +
       `• \`*sessao\` — Iniciar sessão terapêutica\n` +
       `• \`*interpretar-casa {1-72}\` — Interpretar uma casa\n` +
@@ -110,7 +110,7 @@ bot.catch((err, ctx) => {
 
 // ── Iniciar bot ───────────────────────────────────────────────────────────────
 bot.launch().then(() => {
-  console.log("🪷 Bot Telegram da Denise Mascarenhas iniciado!");
+  console.log("🪷 Bot Telegram da Padma iniciado!");
 });
 
 // Graceful shutdown
