@@ -730,9 +730,9 @@
             body: JSON.stringify({ text }),
           });
 
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
           const data = await res.json();
+          if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
           const audio = new Audio(`data:${data.mimeType};base64,${data.audio}`);
           currentAudio = audio;
 
@@ -757,7 +757,7 @@
           audio.play();
         } catch (err) {
           console.error("TTS error:", err);
-          showError("Erro ao sintetizar voz. Verifique a GOOGLE_API_KEY.");
+          showError(err.message || "Erro ao sintetizar voz.");
           if (currentPlayBtn === btn) {
             btn.textContent = "▶ ouvir";
             btn.classList.remove("playing");
@@ -864,9 +864,9 @@
             body: JSON.stringify({ audio: base64, mimeType }),
           });
 
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
           const data = await res.json();
+
+          if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
           if (data.transcription && data.transcription.trim()) {
             inputEl.value = data.transcription.trim();
@@ -877,7 +877,7 @@
           }
         } catch (err) {
           console.error("STT error:", err);
-          showError("Erro ao transcrever áudio.");
+          showError(err.message || "Erro ao transcrever áudio.");
         } finally {
           inputEl.placeholder = prevPlaceholder;
           inputEl.disabled = false;
