@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     const genai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
     const response = await genai.models.generateContent({
-      model: "gemini-2.5-flash-preview-tts",
+      model: "gemini-2.5-flash-tts",
       contents: [{ role: "user", parts: [{ text: text.trim() }] }],
       config: {
         responseModalities: ["AUDIO"],

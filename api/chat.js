@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Método não permitido." });
   }
 
-  const { message, history = [] } = req.body;
+  const { message, history = [], voiceMode = false } = req.body;
 
   if (!message || typeof message !== "string" || !message.trim()) {
     return res.status(400).json({ error: "Campo 'message' é obrigatório." });
@@ -37,10 +37,25 @@ export default async function handler(req, res) {
   ];
 
   try {
+    const VOICE_INSTRUCTION = `
+
+[MODO VOZ ATIVO]
+O jogador está usando interface de voz. Adapte sua resposta para leitura em voz alta:
+- Seja breve e direta: máximo 2-3 frases curtas por resposta
+- Sem formatação markdown (nada de **, *, \`, listas com -)
+- Use linguagem falada natural e acolhedora, como numa conversa presencial
+- Fale em prosa fluida, sem tópicos ou enumerações
+- Quando precisar listar algo, fale em sequência natural (ex: "temos três opções: a primeira é..., a segunda...")
+`;
+
+    const systemPrompt = voiceMode
+      ? SYSTEM_PROMPT + VOICE_INSTRUCTION
+      : SYSTEM_PROMPT;
+
     const response = await anthropic.messages.create({
       model: process.env.CLAUDE_MODEL || "claude-opus-4-6",
-      max_tokens: 2048,
-      system: SYSTEM_PROMPT,
+      max_tokens: voiceMode ? 512 : 2048,
+      system: systemPrompt,
       messages,
     });
 

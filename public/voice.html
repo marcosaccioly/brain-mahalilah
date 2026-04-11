@@ -662,7 +662,7 @@
           const res = await fetch(API_CHAT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text, history }),
+            body: JSON.stringify({ message: text, history, voiceMode: true }),
           });
 
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -870,8 +870,13 @@
 
           if (data.transcription && data.transcription.trim()) {
             inputEl.value = data.transcription.trim();
-            inputEl.style.height = "auto";
-            inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+            // Modo rádio: envia automaticamente após transcrição
+            inputEl.placeholder = prevPlaceholder;
+            inputEl.disabled = false;
+            micBtn.disabled = false;
+            sendBtn.disabled = false;
+            sendMessage();
+            return;
           } else {
             showError("Não foi possível transcrever o áudio. Tente novamente.");
           }
@@ -883,7 +888,6 @@
           inputEl.disabled = false;
           micBtn.disabled = false;
           sendBtn.disabled = false;
-          inputEl.focus();
         }
       }
 
