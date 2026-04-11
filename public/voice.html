@@ -665,9 +665,9 @@
             body: JSON.stringify({ message: text, history, voiceMode: true }),
           });
 
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
           const data = await res.json();
+          if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
           history = data.history;
           localStorage.setItem("padma_voice_history", JSON.stringify(history));
 
@@ -675,7 +675,7 @@
           renderMessage("ai", data.response);
         } catch (err) {
           removeTypingIndicator();
-          showError("Erro ao conectar. Verifique a conexão e tente novamente.");
+          showError(err.message || "Erro ao conectar.");
           console.error(err);
         } finally {
           isLoading = false;
