@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     const genai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
     const response = await genai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       contents: [
         {
           role: "user",
