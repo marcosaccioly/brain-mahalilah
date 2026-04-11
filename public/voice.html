@@ -424,6 +424,56 @@
         50%       { box-shadow: 0 0 0 8px rgba(239,68,68,0); }
       }
 
+      /* ── Live toggle ── */
+      .live-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+        padding: 4px 10px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        transition: all 0.3s;
+      }
+
+      .live-toggle.active {
+        border-color: var(--rec);
+        color: var(--rec);
+        background: rgba(239,68,68,0.1);
+      }
+
+      .live-toggle .toggle-track {
+        width: 28px;
+        height: 16px;
+        border-radius: 8px;
+        background: var(--surface2);
+        position: relative;
+        transition: background 0.3s;
+      }
+
+      .live-toggle.active .toggle-track {
+        background: var(--rec);
+      }
+
+      .live-toggle .toggle-thumb {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s;
+      }
+
+      .live-toggle.active .toggle-thumb {
+        left: 14px;
+        background: #fff;
+      }
+
       /* ── Toast ── */
       #error-toast {
         position: fixed;
@@ -454,6 +504,10 @@
           <p>Maha Lilah · IA</p>
         </div>
         <div class="header-actions">
+          <div id="live-toggle" class="live-toggle" title="LIVE: envia e lê automaticamente">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            LIVE
+          </div>
           <button id="reset-btn" title="Reiniciar conversa">↺ Reiniciar</button>
           <a href="/index.html" title="Voltar ao modo texto">← texto</a>
         </div>
@@ -510,6 +564,7 @@
 
       let history   = JSON.parse(localStorage.getItem("padma_voice_history") || "[]");
       let isLoading = false;
+      let liveMode  = false;
 
       // Recording state
       let mediaRecorder    = null;
@@ -532,6 +587,13 @@
       const recBar     = document.getElementById("rec-bar");
       const recTimer   = document.getElementById("rec-timer");
       const errorToast = document.getElementById("error-toast");
+      const liveToggle = document.getElementById("live-toggle");
+
+      // ── Live toggle ──────────────────────────────────────────
+      liveToggle.addEventListener("click", () => {
+        liveMode = !liveMode;
+        liveToggle.classList.toggle("active", liveMode);
+      });
 
       // Restore history
       if (history.length > 0) {
@@ -677,6 +739,12 @@
 
           removeTypingIndicator();
           renderMessage("ai", data.response);
+
+          // LIVE: auto-play TTS da resposta
+          if (liveMode) {
+            const lastPlayBtn = messagesEl.querySelector(".message.ai:last-child .play-btn");
+            if (lastPlayBtn) handlePlayBtn(data.response, lastPlayBtn);
+          }
         } catch (err) {
           removeTypingIndicator();
           showError(err.message || "Erro ao conectar.");
@@ -874,12 +942,19 @@
 
           if (data.transcription && data.transcription.trim()) {
             inputEl.value = data.transcription.trim();
-            // Modo rádio: envia automaticamente após transcrição
             inputEl.placeholder = prevPlaceholder;
             inputEl.disabled = false;
             micBtn.disabled = false;
             sendBtn.disabled = false;
-            sendMessage();
+            if (liveMode) {
+              // LIVE: envia automaticamente após transcrição
+              sendMessage();
+            } else {
+              // Normal: preenche textarea para o usuário revisar/editar
+              inputEl.style.height = "auto";
+              inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+              inputEl.focus();
+            }
             return;
           } else {
             showError("Não foi possível transcrever o áudio. Tente novamente.");
