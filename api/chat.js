@@ -37,16 +37,16 @@ export default async function handler(req, res) {
   ];
 
   try {
-    const VOICE_INSTRUCTION = `
-
-[MODO VOZ ATIVO]
-O jogador está usando interface de voz. Adapte sua resposta para leitura em voz alta:
-- Seja breve e direta: máximo 2-3 frases curtas por resposta
-- Sem formatação markdown (nada de **, *, \`, listas com -)
-- Use linguagem falada natural e acolhedora, como numa conversa presencial
-- Fale em prosa fluida, sem tópicos ou enumerações
-- Quando precisar listar algo, fale em sequência natural (ex: "temos três opções: a primeira é..., a segunda...")
-`;
+    const VOICE_INSTRUCTION = [
+      "",
+      "[MODO VOZ ATIVO]",
+      "O jogador está usando interface de voz. Adapte sua resposta para leitura em voz alta:",
+      "- Seja breve e direta: máximo 2-3 frases curtas por resposta",
+      "- Sem formatação markdown (nada de negrito, itálico, listas com traço ou código)",
+      "- Use linguagem falada natural e acolhedora, como numa conversa presencial",
+      "- Fale em prosa fluida, sem tópicos ou enumerações",
+      "- Quando precisar listar algo, fale em sequência natural",
+    ].join("\n");
 
     const systemPrompt = voiceMode
       ? SYSTEM_PROMPT + VOICE_INSTRUCTION
