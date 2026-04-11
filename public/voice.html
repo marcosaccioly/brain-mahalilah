@@ -644,6 +644,10 @@
         setTimeout(() => (errorToast.style.display = "none"), 4500);
       }
 
+      // ── Voice mode instruction (prepended to message) ───────
+      const VOICE_PREFIX = "[MODO VOZ: responda de forma breve (2-3 frases), " +
+        "sem markdown, sem listas, linguagem falada natural e acolhedora]\n\n";
+
       // ── Send message ─────────────────────────────────────────
       async function sendMessage() {
         const text = inputEl.value.trim();
@@ -662,7 +666,7 @@
           const res = await fetch(API_CHAT, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: text, history, voiceMode: true }),
+            body: JSON.stringify({ message: VOICE_PREFIX + text, history }),
           });
 
           const data = await res.json();
