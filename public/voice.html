@@ -786,6 +786,7 @@
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
+          // Chrome suporta audio/webm (opus); o servidor normaliza antes de enviar ao Gemini
           const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
             ? "audio/webm;codecs=opus"
             : MediaRecorder.isTypeSupported("audio/webm")
