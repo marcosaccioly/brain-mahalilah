@@ -66,9 +66,10 @@ export default async function handler(req, res) {
     }
 
     const returnedMime = part.inlineData.mimeType || "audio/pcm";
+    const mimeLower = returnedMime.toLowerCase();
 
     // Se for PCM raw, converte para WAV (único formato universal nos browsers)
-    if (returnedMime.startsWith("audio/pcm") || returnedMime.startsWith("audio/l16")) {
+    if (mimeLower.startsWith("audio/pcm") || mimeLower.startsWith("audio/l16")) {
       const rateMatch = returnedMime.match(/rate=(\d+)/i);
       const sampleRate = rateMatch ? parseInt(rateMatch[1]) : 24000;
       return res.json({ audio: pcmToWav(part.inlineData.data, sampleRate), mimeType: "audio/wav" });
