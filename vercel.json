@@ -3,10 +3,18 @@
   "functions": {
     "api/chat.js": {
       "maxDuration": 60
+    },
+    "api/tts.js": {
+      "maxDuration": 30
+    },
+    "api/stt.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
     { "source": "/chat", "destination": "/api/chat" },
-    { "source": "/health", "destination": "/api/health" }
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/tts", "destination": "/api/tts" },
+    { "source": "/stt", "destination": "/api/stt" }
   ]
 }
