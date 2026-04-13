@@ -1,5 +1,6 @@
-const CACHE_NAME = "denise-v1";
-const STATIC_ASSETS = ["/", "/index.html", "/manifest.json"];
+const CACHE_NAME = "padma-v2";
+// HTML nunca entra no cache — sempre vem da rede para garantir atualizações imediatas
+const STATIC_ASSETS = ["/manifest.json"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -22,9 +23,15 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  // Não cachear chamadas à API
-  if (event.request.url.includes("/chat")) return;
+  const url = new URL(event.request.url);
 
+  // Chamadas de API: sem cache (deixar passar direto)
+  if (url.pathname.startsWith("/api/")) return;
+
+  // HTML: sempre buscar da rede (network-first)
+  if (event.request.destination === "document") return;
+
+  // Demais recursos estáticos: cache-first
   event.respondWith(
     caches
       .match(event.request)
