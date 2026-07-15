@@ -261,13 +261,34 @@ operational_frameworks:
           HEURÍSTICA: As intenções devem ser claras para que o Universo possa criar condições.
 
       step_2:
-        name: "Lançamento do Dado"
+        name: "Lançamento do Dado — MOVIMENTO DETERMINÍSTICO"
         description: |
-          Jogador lança o dado (ou gera número 1-6).
+          Jogador lança o dado (número 1-6).
           "Lembre-se: não existe casa boa ou ruim — cada casa é um espelho do seu momento."
-          Avançar no tabuleiro a partir da posição atual (início = casa 1).
-          Se cair em serpente → desliza para a casa inferior.
-          Se cair em flecha → sobe para a casa superior.
+
+          ⚠️ REGRA RÍGIDA — o movimento NÃO é interpretativo. Siga board_mechanics à risca,
+          NA ORDEM. Nunca improvise posição, nunca pule uma conexão, nunca esqueça o loop final.
+          Consulte SEMPRE as tabelas 'arrows:' e 'serpents:' (destinos EXATOS por número).
+
+          ALGORITMO (executar em ordem, sempre):
+          1. ENTRADA: se o jogador ainda não nasceu (peão sobre a casa 68), só entra tirando
+             EXATAMENTE 6 → nasce na casa 6. Qualquer outro número: permanece na 68, joga de novo.
+          2. AVANÇO: nova_posição = posição_atual + dado.
+             - Se nova_posição ≤ 69 → é a casa de destino.
+             - Se nova_posição ≥ 70 → entra na ZONA-PRISÃO 70-71-72 (ver regra 4).
+          3. CONEXÃO (OBRIGATÓRIA): ao pousar, consultar a tabela de conexões pelo NÚMERO da casa:
+             - Se a casa está em 'arrows:' → SOBE para o .to exato (flecha/virtude).
+             - Se a casa está em 'serpents:' → DESCE para o .to exato (serpente/sombra).
+             - A conexão SEMPRE dispara — não é opcional nem depende de feeling. Só depois
+               dela é que a casa de destino é lida (step_3).
+          4. ZONA-PRISÃO 70-71-72 (o "loop das casas finais"): pinball entre as paredes 70 e 72.
+             Sobe 70→71→72, bate no teto e volta 72→71→70, bate no piso e sobe de novo:
+             sequência 70,71,72,71,70,71,72,71,70... Cair EXATAMENTE na 72 dispara a serpente
+             72→51 (única saída da prisão: despenca pra 51 e recomeça a subida). Ex.: na 69 e
+             tira 3 → 72 → serpente → 51. Na 70 e tira 1 → 71. Na 71 e tira 2 → volta pra 71.
+          5. VITÓRIA: chegar EXATAMENTE na casa 68 (Consciência Cósmica) encerra o jogo —
+             seja pelo dado, seja pela flecha 54→68. Passar de 68 sem parar nela = cai na
+             zona-prisão (regra 4). Não há vitória "por aproximação": tem que ser exato.
 
       step_3:
         name: "Leitura da Casa"
@@ -395,6 +416,39 @@ houses:
   70: { name: "VERDADE",             sanskrit: "Satoguṇa",       keywords: "Luz | reconhecimento de sua natureza divina | síntese" }
   71: { name: "ABERTURA",            sanskrit: "Rajoguṇa",       keywords: "Movimento | preparação | abertura" }
   72: { name: "RENASCIMENTO",        sanskrit: "Tamoguṇa",       keywords: "Novas oportunidades | novas experiências | entrega" }
+
+# ─── MECÂNICA DETERMINÍSTICA DO TABULEIRO ───
+# [SOURCE: mahalilah-therapy-app/src/hooks/useGameState.ts + src/lib/boardLayout.ts — motor React em produção]
+# Regras de movimento RÍGIDAS, consultadas pelo step_2. NÃO interpretar — executar na ordem.
+board_mechanics:
+  start_house: 68              # peão começa SOBRE a casa 68 (Consciência Cósmica), ainda fora do jogo
+  entry:
+    rule: "tirar_6_exato"      # só nasce tirando 6 exato
+    born_house: 6              # 6 → nasce na casa 6 (Casa da Confusão)
+    on_fail: "permanece_na_68" # qualquer outro número: fica na 68 e joga de novo
+  victory:
+    house: 68                  # vitória = pousar EXATAMENTE na 68 (pelo dado OU pela flecha 54→68)
+    exact_landing_required: true  # sem vitória "por aproximação"; passar da 68 sem parar → zona-prisão
+  advance:
+    formula: "posicao_atual + dado"
+    destino_direto_se: "nova_posicao <= 69"   # 1..69 → casa de destino direta
+    entra_prisao_se: "nova_posicao >= 70"     # ≥70 → zona-prisão (ver prison_zone)
+  prison_zone:
+    houses: [70, 71, 72]       # "loop das casas finais" — pinball entre as paredes 70 e 72
+    walls: [70, 72]            # a direção inverte ao bater em qualquer parede
+    sequence: "70→71→72→71→70→71→72→71→70…"
+    only_exit:
+      trigger_house: 72        # cair EXATAMENTE na 72
+      via: serpent             # dispara a serpente 72→51
+      lands: 51                # única saída: despenca pra 51 e recomeça a subida
+    examples:
+      - "na 69 tira 3 → 72 → serpente → 51"
+      - "na 70 tira 1 → 71"
+      - "na 71 tira 2 → bate no teto (72) e volta → 71"
+  connection:
+    mandatory: true            # ao pousar, a conexão SEMPRE dispara — nunca é opcional
+    lookup: "pelo NÚMERO da casa nas tabelas 'arrows:' (sobe) e 'serpents:' (desce)"
+    resolve_before_reading: true  # resolver a conexão ANTES de ler a casa de destino (step_3)
 
 # ─── 10 SERPENTES (Dinâmicas Egóicas) ───
 serpents:
