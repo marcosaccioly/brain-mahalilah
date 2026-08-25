@@ -38,7 +38,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await anthropic.messages.create({
-      model: process.env.CLAUDE_MODEL || "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 2048,
       system: [
         {
