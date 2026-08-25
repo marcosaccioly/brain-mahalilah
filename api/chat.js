@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     const assistantText =
       response.content[0]?.type === "text"
         ? response.content[0].text
-        : "(sem resposta)";
+        : `(sem resposta) DEBUG:${JSON.stringify(response.content)}|stop=${response.stop_reason}`;
 
     // Retorna o histórico atualizado para o cliente guardar
     const updatedHistory = [
