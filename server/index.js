@@ -74,10 +74,8 @@ app.post("/chat", async (req, res) => {
       messages: getHistory(sessionId),
     });
 
-    const assistantText =
-      response.content[0]?.type === "text"
-        ? response.content[0].text
-        : "(sem resposta)";
+    const textBlock = response.content.find((block) => block.type === "text");
+    const assistantText = textBlock ? textBlock.text : "(sem resposta)";
 
     appendToHistory(sessionId, "assistant", assistantText);
 
